@@ -2,7 +2,6 @@ package com.example.kafka_poc.controller;
 
 import com.example.kafka_poc.model.Product;
 import com.example.kafka_poc.service.ProductProducer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,12 +19,8 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestBody Product product) {
         try {
-            // Convert product to JSON string
-            ObjectMapper mapper = new ObjectMapper();
-            String productJson = mapper.writeValueAsString(product);
-
-            // Send product data to Kafka
-            productProducer.sendMessage(productJson);
+            // Send product data directly to Kafka
+            productProducer.sendProduct(product);
             return ResponseEntity.ok("Product sent to Kafka.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());

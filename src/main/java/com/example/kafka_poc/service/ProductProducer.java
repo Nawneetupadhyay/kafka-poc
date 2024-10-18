@@ -1,5 +1,6 @@
 package com.example.kafka_poc.service;
 
+import com.example.kafka_poc.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -7,29 +8,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
-
 @Service
-    public class ProductProducer {
+public class ProductProducer {
 
-        private static final String TOPIC = "productGrp";
+    private static final String TOPIC = "productGrp";
 
-        @Autowired
-        private KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Product> kafkaTemplate;  // Sending Product directly
 
-        public void sendMessage(String message) {
-           CompletableFuture<SendResult<String,String>> future = kafkaTemplate.send(TOPIC, message);
-           future.whenComplete((result,ex)->{
-               if(ex == null)
-               {
-                   System.out.println("message sent successfully");
-               }
-               else
-               {
-                   System.out.println("unable to send the message ");
-               }
-
-           });
-
-        }
+    public void sendProduct(Product product) {
+        CompletableFuture<SendResult<String, Product>> future = kafkaTemplate.send(TOPIC, product);
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                System.out.println("Product sent successfully");
+            } else {
+                System.out.println("Unable to send the product");
+            }
+        });
     }
-
+}
