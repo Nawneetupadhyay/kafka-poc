@@ -14,15 +14,15 @@ public class ProductProducer {
     private static final String TOPIC = "productGrp";
 
     @Autowired
-    private KafkaTemplate<String, Product> kafkaTemplate;  // Sending Product directly
+    private KafkaTemplate<String, Product> kafkaTemplate;
 
     public void sendProduct(Product product) {
         CompletableFuture<SendResult<String, Product>> future = kafkaTemplate.send(TOPIC, product);
         future.whenComplete((result, ex) -> {
             if (ex == null) {
-                System.out.println("Product sent successfully");
+                System.out.println("Product sent successfully: " + product);
             } else {
-                System.out.println("Unable to send the product");
+                System.out.println("Failed to send product: " + product);
             }
         });
     }
